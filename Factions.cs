@@ -65,17 +65,6 @@ namespace Oxide.Plugins
                 cachedPlayers.Add(id, data);
             }
 
-            internal static Player get(ulong id)
-            {
-                Player data = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{id}");
-
-                {
-                    return;
-                }
-
-                return data;
-            }
-
             internal void Save(ulong id)
             {
                 Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Players/{id}"), this, true);
@@ -100,7 +89,11 @@ namespace Oxide.Plugins
 
                 if (owner != "Wilderness")
                 {
-                    Player p = Player.get(bPlayer.userID);
+                    Player p = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
+
+                    if(p == null) {
+                        return false;
+                    }
 
                     Fact fac = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{p.Faction}");
 
@@ -133,15 +126,22 @@ namespace Oxide.Plugins
             {
                 Fact query = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{name}");
 
-                if(query == null) {
+                if (query == null)
+                {
                     return "Invalid Faction Name";
                 }
 
                 string playerList = "";
 
-                foreach(string p in query.Players) {
-                    playerList += Player.get(p).userName;
-                    playerList += "<br>";
+                foreach (string p in query.Players)
+                {
+                    Player plr = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
+
+                    if (plr != null)
+                    {
+                        playerList += plr.userName;
+                        playerList += "<br>";
+                    }
                 }
 
                 return $"<color = {query.colour}>Faction: {query.name}</color><br>Power: {query.power}<br><color = {"#00ffff"}>Members:</color><br>{playerList}";
@@ -155,7 +155,7 @@ namespace Oxide.Plugins
             string faction;
             internal static string Claim(BasePlayer bPlayer)
             {
-                Player p = Player.get(bPlayer.userID);
+                Player p = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
 
                 Fact claimer = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{p.Faction}");
 
@@ -185,7 +185,8 @@ namespace Oxide.Plugins
                             return "Something went wrong. Contact an Administrator! error x002";
                         }
 
-                        if(claimer.name == claimee.name) {
+                        if (claimer.name == claimee.name)
+                        {
                             return "You already own this land!";
                         }
 
@@ -226,7 +227,11 @@ namespace Oxide.Plugins
 
             internal static string Unclaim(BasePlayer bPlayer)
             {
-                Player p = Player.get(bPlayer.userID);
+                Player p = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
+
+                if(p == null) {
+                    return;
+                }
 
                 Fact unclaimer = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{p.Faction}");
 
@@ -295,7 +300,11 @@ namespace Oxide.Plugins
                     data.chieftain = bPlayer.userID;
                     data.members.Add(bPlayer.userID);
 
-                    Player p = Player.get(bPlayer.userID);
+                    Player p = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
+
+                    if(p == null) {
+                        return;
+                    }
 
                     p.faction = name;
 
