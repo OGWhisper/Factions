@@ -134,9 +134,9 @@ namespace Oxide.Plugins
 
                 string playerList = "";
 
-                foreach (string p in query.members)
+                foreach (ulong p in query.members)
                 {
-                    Player plr = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{(string)p}");
+                    Player plr = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{p}");
 
                     if (plr != null)
                     {
