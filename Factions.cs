@@ -150,9 +150,9 @@ namespace Oxide.Plugins
 
         public class Chunk
         {
-            int X;
-            int Y;
-            string faction;
+            public int X;
+            public int Y;
+            public string faction;
             internal static string Claim(BasePlayer bPlayer)
             {
                 Player p = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
