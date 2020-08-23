@@ -134,7 +134,7 @@ namespace Oxide.Plugins
 
                 string playerList = "";
 
-                foreach (string p in query.Players)
+                foreach (string p in query.members)
                 {
                     Player plr = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
 
@@ -220,7 +220,7 @@ namespace Oxide.Plugins
                     Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Chunks/{X},{Y}"), data, true);
                     return "Land Claimed";
                 }
-                
+
                 return "Need more power";
             }
 
