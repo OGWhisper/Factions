@@ -46,7 +46,7 @@ namespace Oxide.Plugins
             foreach (var data in cachedPlayers) data.Value.Save(data.Key);
         }
 
-        class Player
+        public class Player
         {
             public string userName;
             public string faction;
@@ -81,7 +81,7 @@ namespace Oxide.Plugins
                 Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Players/{id}"), this, true);
             }
         }
-        class Fact
+        public class Fact
         {
             public string name = "";
             public string tag = "";
@@ -148,7 +148,7 @@ namespace Oxide.Plugins
             }
         }
 
-        class Chunk
+        public class Chunk
         {
             int X;
             int Y;
