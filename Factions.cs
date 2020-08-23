@@ -37,8 +37,8 @@ namespace Oxide.Plugins
         // private object CanPickupLock(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
         // private object CanUnlock(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
 
-        private object OnPlayerAttack(BasePlayer bPlayer, HitInfo info) => Fact.CanAttack(bPlayer, info?.Initiator);
-        private object OnMeleeAttack(BasePlayer bPlayer, HitInfo info) => Fact.CanAttack(bPlayer, info?.Initiator);
+        private object OnPlayerAttack(BasePlayer bPlayer, HitInfo info) => Fact.CanAttack(bPlayer, info?.Initiator as BasePlayer);
+        private object OnMeleeAttack(BasePlayer bPlayer, HitInfo info) => Fact.CanAttack(bPlayer, info?.Initiator as BasePlayer);
         private object OnPlayerAssist(BasePlayer target, BasePlayer attacker) => Fact.CanAttack(target, attacker);
 
         private void Unload()
