@@ -303,7 +303,7 @@ namespace Oxide.Plugins
                     Player p = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
 
                     if(p == null) {
-                        return null;
+                        return;
                     }
 
                     p.faction = name;
