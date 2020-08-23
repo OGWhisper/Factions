@@ -52,7 +52,7 @@ namespace Oxide.Plugins
             public string faction;
             internal static void TryLoad(ulong id, string uname)
             {
-                if (cachedPlayers.ContainsKey(id)) return null;
+                if (cachedPlayers.ContainsKey(id)) return;
 
                 Player data = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{id}");
 
