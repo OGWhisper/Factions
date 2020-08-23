@@ -296,7 +296,7 @@ namespace Oxide.Plugins
 
             if (args[0].ToLower() == "create")
             {
-                if(!args[1]) {
+                if(args.Length > 1) {
                     PrintToChat(bPlayer, "Invalid Name");
                     return;
                 }
