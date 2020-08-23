@@ -287,8 +287,11 @@ namespace Oxide.Plugins
         {
             OnPlayerInit(bPlayer);
 
+            PrintToChat(bPlayer, command);
+
             if (args[0].ToLower() == "create")
             {
+                
                 string name = command.ToLower().Replace("!f ", "").Replace("!factions ", "").Replace("create ", "").Replace(" ", "_").ToLower();
 
                 Fact data = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{name}");
