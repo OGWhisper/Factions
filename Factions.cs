@@ -55,8 +55,8 @@ namespace Oxide.Plugins
 
         public class Player
         {
-            public string userName;
-            public string faction;
+            public string userName = "";
+            public string faction = "";
             internal static void TryLoad(BasePlayer bPlayer)
             {
                 if (cachedPlayers.ContainsKey(bPlayer.userID)) return;
@@ -74,7 +74,7 @@ namespace Oxide.Plugins
 
             internal void Save(ulong id)
             {
-                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Players/{id}"), this, true);
+                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Players/{id}"), this);
             }
         }
         public class Fact
@@ -207,9 +207,9 @@ namespace Oxide.Plugins
                             claimer.power -= 50;
                             claimee.power += 50;
 
-                            Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{claimee.name}"), claimee, true);
-                            Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{claimer.name}"), claimer, true);
-                            Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Chunks/{X},{Y}"), data, true);
+                            Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{claimee.name}"), claimee);
+                            Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{claimer.name}"), claimer);
+                            Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Chunks/{X},{Y}"), data);
                             return "Land Claimed";
                         }
                     }
@@ -223,8 +223,8 @@ namespace Oxide.Plugins
 
                     claimer.power -= 50;
 
-                    Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{claimer.name}"), claimer, true);
-                    Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Chunks/{X},{Y}"), data, true);
+                    Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{claimer.name}"), claimer);
+                    Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Chunks/{X},{Y}"), data);
                     return "Land Claimed";
                 }
 
@@ -266,8 +266,8 @@ namespace Oxide.Plugins
 
                 unclaimer.power += 50;
 
-                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{unclaimer.name}"), unclaimer, true);
-                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Chunks/{X},{Y}"), data, true);
+                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{unclaimer.name}"), unclaimer);
+                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Chunks/{X},{Y}"), data);
                 return "Land Unclaimed";
             }
 
@@ -307,13 +307,14 @@ namespace Oxide.Plugins
 
                 foreach(string arg in args) {
                     if(c != 0) {
-                        name += $"_{arg}";
+                        if(c != 1) {
+                            name += "_";
+                        }
+                        name += arg;
                     }
 
                     c++;
                 }
-
-                name.Remove(0, 1);
 
                 Fact data = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{name}");
 
@@ -333,9 +334,10 @@ namespace Oxide.Plugins
 
                     p.faction = name;
 
-                    Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{name}"), data, true);
-                    Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Players/{bPlayer.userID}"), p, true);
+                    Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{name}"), data);
+                    Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Players/{bPlayer.userID}"), p);
                     PrintToChat(bPlayer, $"Faction {name} Created");
+                    PrintToChat(bPlayer, Chunk.Claim(bPlayer));
                 }
                 else
                 {
