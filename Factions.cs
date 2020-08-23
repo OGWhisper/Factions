@@ -115,7 +115,7 @@ namespace Oxide.Plugins
                 string victimChunk = Chunk.Entered(victim);
                 string attackerChunk = Chunk.Entered(victim);
 
-                if (victimChunk == "Wilderness" && attacker == "Wilderness")
+                if (victimChunk == "Wilderness" && attackerChunk == "Wilderness")
                 {
                     return null;
                 }
