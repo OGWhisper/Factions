@@ -52,7 +52,7 @@ namespace Oxide.Plugins
             public string faction;
             internal static void TryLoad(ulong id, string uname)
             {
-                if (cachedPlayers.ContainsKey(id)) return;
+                if (cachedPlayers.ContainsKey(id)) return null;
 
                 Player data = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{id}");
 
@@ -230,7 +230,7 @@ namespace Oxide.Plugins
                 Player p = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
 
                 if(p == null) {
-                    return;
+                    return null;
                 }
 
                 Fact unclaimer = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{p.faction}");
@@ -303,7 +303,7 @@ namespace Oxide.Plugins
                     Player p = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
 
                     if(p == null) {
-                        return;
+                        return null;
                     }
 
                     p.faction = name;
