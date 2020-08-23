@@ -209,7 +209,7 @@ namespace Oxide.Plugins
                 else if (claimer.power > 50)
                 {
                     data = new Chunk();
-                    data.faction = faction.name;
+                    data.faction = claimer.name;
                     data.X = X;
                     data.Y = Y;
 
