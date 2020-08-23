@@ -315,8 +315,6 @@ namespace Oxide.Plugins
 
                 name.Remove(0, 1);
 
-                string name = command.ToLower().Replace("!f ", "").Replace("!factions ", "").Replace("create ", "").Replace(" ", "_").ToLower();
-
                 Fact data = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{name}");
 
                 if (data == null)
