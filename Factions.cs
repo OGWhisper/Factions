@@ -23,23 +23,23 @@ namespace Oxide.Plugins
         }
         private void OnPlayerInit(BasePlayer bPlayer) => Player.TryLoad(bPlayer);
 
-        // private bool CanLock(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
-        // private bool CanDeployItem(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
-        // private bool OnPayForUpgrade(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
-        // private bool OnPayForPlacement(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
-        // private bool CanUseWires(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
-        // private bool CanBuild(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
-        // private bool CanChangeCode(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
-        // private bool CanChangeGrade(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
-        // private bool CanDemolish(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
-        // private bool CanPickupEntity(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
-        // private bool CanRenameBed(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
-        // private bool CanPickupLock(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
-        // private bool CanUnlock(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
+        // private object CanLock(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
+        // private object CanDeployItem(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
+        // private object OnPayForUpgrade(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
+        // private object OnPayForPlacement(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
+        // private object CanUseWires(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
+        // private object CanBuild(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
+        // private object CanChangeCode(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
+        // private object CanChangeGrade(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
+        // private object CanDemolish(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
+        // private object CanPickupEntity(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
+        // private object CanRenameBed(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
+        // private object CanPickupLock(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
+        // private object CanUnlock(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
 
-        private bool OnPlayerAttack(BasePlayer bPlayer, HitInfo info) => Fact.CanAttack(bPlayer, info?.Initiator);
-        private bool OnMeleeAttack(BasePlayer bPlayer, HitInfo info) => Fact.CanAttack(bPlayer, info?.Initiator);
-        private bool OnPlayerAssist(BasePlayer target, BasePlayer attacker) => Fact.CanAttack(target, attacker);
+        private object OnPlayerAttack(BasePlayer bPlayer, HitInfo info) => Fact.CanAttack(bPlayer, info?.Initiator);
+        private object OnMeleeAttack(BasePlayer bPlayer, HitInfo info) => Fact.CanAttack(bPlayer, info?.Initiator);
+        private object OnPlayerAssist(BasePlayer target, BasePlayer attacker) => Fact.CanAttack(target, attacker);
 
         private void Unload()
         {
