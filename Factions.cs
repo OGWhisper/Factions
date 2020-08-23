@@ -316,7 +316,7 @@ namespace Oxide.Plugins
 
             if (args[0].ToLower() == "unclaim")
             {
-                PrintToChat(player, Chunk.Unclaim(bPlayer));
+                PrintToChat(bPlayer, Chunk.Unclaim(bPlayer));
             }
 
             if (args[0].ToLower() == "info")
