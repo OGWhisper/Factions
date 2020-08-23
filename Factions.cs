@@ -100,7 +100,7 @@ namespace Oxide.Plugins
 
                     if (fac != null)
                     {
-                        if (fac.name != player.faction)
+                        if (fac.name != p.faction)
                         {
                             return false;
                         }
