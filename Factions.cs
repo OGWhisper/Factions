@@ -50,7 +50,7 @@ namespace Oxide.Plugins
         {
             public string userName;
             public string faction;
-            internal static void TryLoad(ulong id, string uname)
+            public static void TryLoad(ulong id, string uname)
             {
                 if (cachedPlayers.ContainsKey(id)) return;
 
@@ -65,7 +65,7 @@ namespace Oxide.Plugins
                 cachedPlayers.Add(id, data);
             }
 
-            internal void Save(ulong id)
+            public void Save(ulong id)
             {
                 Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Players/{id}"), this, true);
             }
@@ -83,7 +83,7 @@ namespace Oxide.Plugins
             public string colour = "#00ff00";
             // #ff9900 #6699ff #ff00ff #ff9999 #339933 #ffcc99".Split(" ")[Math.Round(Random()*8 - 0.5)] || "#ff0000";
 
-            internal static bool CanAct(BasePlayer bPlayer)
+            public static bool CanAct(BasePlayer bPlayer)
             {
                 string owner = Chunk.Entered(bPlayer);
 
@@ -110,7 +110,7 @@ namespace Oxide.Plugins
                 return null;
             }
 
-            internal static bool CanAttack(BasePlayer victim, BasePlayer attacker)
+            public static bool CanAttack(BasePlayer victim, BasePlayer attacker)
             {
                 string victimChunk = Chunk.Entered(victim);
                 string attackerChunk = Chunk.Entered(victim);
@@ -123,7 +123,7 @@ namespace Oxide.Plugins
                 return false;
             }
 
-            internal static string Info(BasePlayer bPlayer, string name)
+            public static string Info(BasePlayer bPlayer, string name)
             {
                 Fact query = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{name}");
 
@@ -151,11 +151,11 @@ namespace Oxide.Plugins
 
         public class Chunk
         {
-            int X;
-            int Y;
-            string faction;
+            public int X;
+            public int Y;
+            public string faction;
 
-            internal static string Entered(BasePlayer bPlayer)
+            public static string Entered(BasePlayer bPlayer)
             {
                 Vector3 pos = bPlayer.transform.position;
                 int X = (int)Math.Floor(pos.x / 50);
