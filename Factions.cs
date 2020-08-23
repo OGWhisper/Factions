@@ -91,7 +91,8 @@ namespace Oxide.Plugins
                 {
                     Player p = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
 
-                    if(p == null) {
+                    if (p == null)
+                    {
                         return false;
                     }
 
@@ -153,116 +154,6 @@ namespace Oxide.Plugins
             int X;
             int Y;
             string faction;
-            internal static string Claim(BasePlayer bPlayer)
-            {
-                Player p = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
-
-                Fact claimer = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{p.Faction}");
-
-                if (claimer == null)
-                {
-                    return "You are not in a Faction!";
-                }
-
-                if (claimer.chieftain != bPlayer.userID)
-                {
-                    return "Only your Factions Chieftain may claim land";
-                }
-
-                Vector3 pos = bPlayer.transform.position;
-                int X = (int)Math.Floor(pos.x / 50);
-                int Y = (int)Math.Floor(pos.y / 50);
-                Chunk data = Interface.Oxide.DataFileSystem.ReadObject<Chunk>($"Factions/Chunks/{X},{Y}");
-
-                if (data != null)
-                {
-                    if (data.faction != "")
-                    {
-                        Fact claimee = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{data.Faction}");
-
-                        if (claimee == null)
-                        {
-                            return "Something went wrong. Contact an Administrator! error x002";
-                        }
-
-                        if (claimer.name == claimee.name)
-                        {
-                            return "You already own this land!";
-                        }
-
-                        if (claimer.power > claimee.power)
-                        {
-                            data.faction = claimer.name;
-                            claimer.chunks.Add($"{X},{Y}");
-                            claimee.chunks.Remove($"{X},{Y}");
-
-                            claimer.power -= 50;
-                            claimee.power += 50;
-
-                            Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{claimee.name}"), claimee, true);
-                            Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{claimer.name}"), claimer, true);
-                            Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Chunks/{X},{Y}"), data, true);
-                            return "Land Claimed";
-                        }
-                    }
-                }
-                else if (claimer.power > 50)
-                {
-                    data = new Chunk();
-                    data.Faction = faction.name;
-                    data.X = X;
-                    data.Y = Y;
-
-                    claimer.power -= 50;
-
-                    Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{claimer.name}"), claimer, true);
-                    Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Chunks/{X},{Y}"), data, true);
-                    return "Land Claimed";
-                }
-                else
-                {
-                    return "Need more power";
-                }
-            }
-
-            internal static string Unclaim(BasePlayer bPlayer)
-            {
-                Player p = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
-
-                if(p == null) {
-                    return;
-                }
-
-                Fact unclaimer = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{p.Faction}");
-
-                if (unclaimer == null)
-                {
-                    return "You are not in a Faction!";
-                }
-
-                if (unclaimer.chieftain != bPlayer.userID)
-                {
-                    return "Only your Factions Chieftain may unclaim land";
-                }
-
-                Vector3 pos = bPlayer.transform.position;
-                int X = (int)Math.Floor(pos.x / 50);
-                int Y = (int)Math.Floor(pos.y / 50);
-                Chunk data = Interface.Oxide.DataFileSystem.ReadObject<Chunk>($"Factions/Chunks/{X},{Y}");
-
-                if (data == null || data.faction != unclaimer.name)
-                {
-                    return "You do not own this Chunk!";
-                }
-
-                data.faction = "";
-
-                unclaimer.power += 50;
-
-                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{unclaimer.name}"), unclaimer, true);
-                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Chunks/{X},{Y}"), data, true);
-                return "Land Unclaimed";
-            }
 
             internal static string Entered(BasePlayer bPlayer)
             {
@@ -302,8 +193,9 @@ namespace Oxide.Plugins
 
                     Player p = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
 
-                    if(p == null) {
-                        return;
+                    if (p == null)
+                    {
+                        PrintToChat(bPlayer, "Something went wrong. Error: x001");
                     }
 
                     p.faction = name;
@@ -320,12 +212,114 @@ namespace Oxide.Plugins
 
             if (args[0].ToLower() == "claim")
             {
-                PrintToChat(bPlayer, Chunk.Claim(bPlayer));
+                Player p = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
+
+                Fact claimer = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{p.Faction}");
+
+                if (claimer == null)
+                {
+                    PrintToChat(bPlayer, "You are not in a Faction!");
+                }
+
+                if (claimer.chieftain != bPlayer.userID)
+                {
+                    PrintToChat(bPlayer, "Only your Factions Chieftain may claim land");
+                }
+
+                Vector3 pos = bPlayer.transform.position;
+                int X = (int)Math.Floor(pos.x / 50);
+                int Y = (int)Math.Floor(pos.y / 50);
+                Chunk data = Interface.Oxide.DataFileSystem.ReadObject<Chunk>($"Factions/Chunks/{X},{Y}");
+
+                if (data != null)
+                {
+                    if (data.faction != "")
+                    {
+                        Fact claimee = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{data.Faction}");
+
+                        if (claimee == null)
+                        {
+                            PrintToChat(bPlayer, "Something went wrong. Contact an Administrator! error x002");
+                        }
+
+                        if (claimer.name == claimee.name)
+                        {
+                            PrintToChat(bPlayer, "You already own this land!");
+                        }
+
+                        if (claimer.power > claimee.power)
+                        {
+                            data.faction = claimer.name;
+                            claimer.chunks.Add($"{X},{Y}");
+                            claimee.chunks.Remove($"{X},{Y}");
+
+                            claimer.power -= 50;
+                            claimee.power += 50;
+
+                            Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{claimee.name}"), claimee, true);
+                            Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{claimer.name}"), claimer, true);
+                            Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Chunks/{X},{Y}"), data, true);
+                            PrintToChat(bPlayer, "Land Claimed");
+                        }
+                    }
+                }
+                else if (claimer.power > 50)
+                {
+                    data = new Chunk();
+                    data.Faction = faction.name;
+                    data.X = X;
+                    data.Y = Y;
+
+                    claimer.power -= 50;
+
+                    Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{claimer.name}"), claimer, true);
+                    Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Chunks/{X},{Y}"), data, true);
+                    PrintToChat(bPlayer, "Land Claimed");
+                }
+                else
+                {
+                    PrintToChat(bPlayer, "Need more power");
+                }
             }
 
             if (args[0].ToLower() == "unclaim")
             {
-                PrintToChat(bPlayer, Chunk.Unclaim(bPlayer));
+                Player p = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
+
+                if (p == null)
+                {
+                    PrintToChat(bPlayer, "Something went wrong. Error: x001");
+                }
+
+                Fact unclaimer = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{p.Faction}");
+
+                if (unclaimer == null)
+                {
+                    PrintToChat(bPlayer, "You are not in a Faction!");
+                }
+
+                if (unclaimer.chieftain != bPlayer.userID)
+                {
+                    PrintToChat(bPlayer, "Only your Factions Chieftain may unclaim land");
+                }
+
+                Vector3 pos = bPlayer.transform.position;
+                int X = (int)Math.Floor(pos.x / 50);
+                int Y = (int)Math.Floor(pos.y / 50);
+                Chunk data = Interface.Oxide.DataFileSystem.ReadObject<Chunk>($"Factions/Chunks/{X},{Y}");
+
+                if (data == null || data.faction != unclaimer.name)
+                {
+                    PrintToChat(bPlayer, "You do not own this Chunk!");
+                }
+
+                data.faction = "";
+
+                unclaimer.power += 50;
+
+                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{unclaimer.name}"), unclaimer, true);
+                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Chunks/{X},{Y}"), data, true);
+                PrintToChat(bPlayer, "Land Unclaimed");
             }
 
             if (args[0].ToLower() == "info")
