@@ -9,8 +9,8 @@ using UnityEngine;
 
 namespace Oxide.Plugins
 {
-    [Info("Factions", "Whisper", "1.0.0", ResourceId = 0)]
-    [Description("")]
+    [Info("Factions", "Whisper", "0.1.0", ResourceId = 0)]
+    [Description("Factions plugin for the game Rust using the umod API ")]
     class Factions : RustPlugin
     {
         static Factions ins;
