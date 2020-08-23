@@ -136,7 +136,7 @@ namespace Oxide.Plugins
 
                 foreach (string p in query.members)
                 {
-                    Player plr = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{p}");
+                    Player plr = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{p.ToString(p)}");
 
                     if (plr != null)
                     {
