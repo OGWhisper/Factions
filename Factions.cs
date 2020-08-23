@@ -23,6 +23,13 @@ namespace Oxide.Plugins
         }
         private void OnPlayerInit(BasePlayer bPlayer) => Player.TryLoad(bPlayer);
 
+        private void OnPlayerSpawn (BasePlayer player) => OnPlayerInit (player);
+        private void OnPlayerRespawn (BasePlayer player) => OnPlayerInit (player);
+        private void OnPlayerSleepEnded (BasePlayer player) => OnPlayerInit (player);
+        private void OnPlayerConnected (BasePlayer player) => OnPlayerInit (player);
+
+        private void OnServerShutDown () => Unload ();
+
         // private object CanLock(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
         // private object CanDeployItem(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
         // private object OnPayForUpgrade(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
