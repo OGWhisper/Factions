@@ -96,7 +96,7 @@ namespace Oxide.Plugins
                         return false;
                     }
 
-                    Fact fac = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{p.Faction}");
+                    Fact fac = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{p.faction}");
 
                     if (fac != null)
                     {
