@@ -83,7 +83,7 @@ namespace Oxide.Plugins
             public string colour = "#00ff00";
             // #ff9900 #6699ff #ff00ff #ff9999 #339933 #ffcc99".Split(" ")[Math.Round(Random()*8 - 0.5)] || "#ff0000";
 
-            internal static bool CanAct(BasePlayer bPlayer)
+            internal static object CanAct(BasePlayer bPlayer)
             {
                 string owner = Chunk.Entered(bPlayer);
 
@@ -110,7 +110,7 @@ namespace Oxide.Plugins
                 return null;
             }
 
-            internal static bool CanAttack(BasePlayer victim, BasePlayer attacker)
+            internal static object CanAttack(BasePlayer victim, BasePlayer attacker)
             {
                 string victimChunk = Chunk.Entered(victim);
                 string attackerChunk = Chunk.Entered(victim);
