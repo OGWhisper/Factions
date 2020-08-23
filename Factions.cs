@@ -91,7 +91,8 @@ namespace Oxide.Plugins
                 {
                     Player p = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
 
-                    if(p == null) {
+                    if (p == null)
+                    {
                         return false;
                     }
 
@@ -219,17 +220,16 @@ namespace Oxide.Plugins
                     Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Chunks/{X},{Y}"), data, true);
                     return "Land Claimed";
                 }
-                else
-                {
-                    return "Need more power";
-                }
+                
+                return "Need more power";
             }
 
             internal static string Unclaim(BasePlayer bPlayer)
             {
                 Player p = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
 
-                if(p == null) {
+                if (p == null)
+                {
                     return null;
                 }
 
@@ -302,7 +302,8 @@ namespace Oxide.Plugins
 
                     Player p = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
 
-                    if(p == null) {
+                    if (p == null)
+                    {
                         return;
                     }
 
