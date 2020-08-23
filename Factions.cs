@@ -50,19 +50,19 @@ namespace Oxide.Plugins
         {
             public string userName;
             public string faction;
-            internal static void TryLoad(ulong id, string uname)
+            internal static void TryLoad(BasePlayer bPlayer)
             {
-                if (cachedPlayers.ContainsKey(id)) return;
+                if (cachedPlayers.ContainsKey(bPlayer.userID)) return;
 
-                Player data = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{id}");
+                Player data = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
 
                 if (data == null)
                 {
                     data = new Player();
-                    data.userName = uname;
+                    data.userName = bPlayer.displayName;
                 }
 
-                cachedPlayers.Add(id, data);
+                cachedPlayers.Add(bPlayer.userID, data);
             }
 
             internal void Save(ulong id)
