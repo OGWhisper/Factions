@@ -36,7 +36,7 @@ namespace Oxide.Plugins
 
                             if (data.faction != null)
                             {
-                                for (let zC = 0; zC < 100; zC += 10)
+                                for (zC = 0; zC < 100; zC += 10)
                                 {
                                     Vector3 from;
                                     Vector3 to;
@@ -52,7 +52,7 @@ namespace Oxide.Plugins
                                     bPlayer.SendConsoleCommand("ddraw.line", 1, "ff0000", from, to);
                                 }
 
-                                for (let zC = 0; zC < 100; zC += 10)
+                                for (zC = 0; zC < 100; zC += 10)
                                 {
                                     Vector3 from;
                                     Vector3 to;
@@ -68,7 +68,7 @@ namespace Oxide.Plugins
                                     bPlayer.SendConsoleCommand("ddraw.line", 1, "ff0000", from, to);
                                 }
 
-                                for (let zC = 0; zC < 100; zC += 10)
+                                for (zC = 0; zC < 100; zC += 10)
                                 {
                                     Vector3 from;
                                     Vector3 to;
@@ -84,7 +84,7 @@ namespace Oxide.Plugins
                                     bPlayer.SendConsoleCommand("ddraw.line", 1, "ff0000", from, to);
                                 }
 
-                                for (let zC = 0; zC < 100; zC += 10)
+                                for (zC = 0; zC < 100; zC += 10)
                                 {
                                     Vector3 from;
                                     Vector3 to;
