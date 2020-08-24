@@ -29,11 +29,16 @@ namespace Oxide.Plugins
         private void OnPlayerConnected(BasePlayer player) => OnPlayerInit(player);
         private void OnTick() {
             foreach(BasePlayer bPlayer in BasePlayer.activePlayerList) {
-                bPlayer.chunkLast = bPlayer.chunkIn;
-                bPlayer.chunkIn = Chunk.Entered(bPlayer);
 
-                if(bPlayer.chunkLast != bPlayer.chunkIn) {
-                    SendToChat(bPlayer, $"Entered: {bPlayer.chunkIn}");
+                Player data = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
+
+                data.chunkLast = data.chunkIn;
+                data.chunkIn = Chunk.Entered(bPlayer);
+
+                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Players/{bPlayer.userID}"), data);
+                
+                if(data.chunkLast != data.chunkIn) {
+                    SendToChat(bPlayer, $"Entered: {data.chunkIn}");
                 }
             }
         }
@@ -59,6 +64,8 @@ namespace Oxide.Plugins
         {
             public string userName = "";
             public string faction = "";
+            public string chunkIn = "";
+            public string chunkLast = "";
             public List<string> invites = new List<string>();
             internal static void TryLoad(BasePlayer bPlayer)
             {
