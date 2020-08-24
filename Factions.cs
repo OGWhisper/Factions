@@ -38,7 +38,7 @@ namespace Oxide.Plugins
                 Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Players/{bPlayer.userID}"), data);
                 
                 if(data.chunkLast != data.chunkIn) {
-                    SendToChat(bPlayer, $"Entered: {data.chunkIn}");
+                    PrintToChat(bPlayer, $"Entered: {data.chunkIn}");
                 }
             }
         }
