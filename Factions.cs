@@ -32,6 +32,7 @@ namespace Oxide.Plugins
                             Vector3 pos = bPlayer.transform.position;
                             int X = (int)Math.Floor(pos.x / 50) + xC;
                             int Y = (int)Math.Floor(pos.y / 50) + yC;
+                            int zC = 0;
                             Chunk data = Interface.Oxide.DataFileSystem.ReadObject<Chunk>($"Factions/Chunks/{X},{Y}");
 
                             if (data.faction != null)
