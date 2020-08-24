@@ -78,7 +78,7 @@ namespace Oxide.Plugins
             public List<string> allies = new List<string>();
             public List<string> enemies = new List<string>();
             public List<string> chunks = new List<string>();
-            public List<string> invites = new List<invites>();
+            public List<string> invites = new List<string>();
             public ulong chieftain = new ulong();
             public string colour = "#00ff00";
             // #ff9900 #6699ff #ff00ff #ff9999 #339933 #ffcc99".Split(" ")[Math.Round(Random()*8 - 0.5)] || "#ff0000";
