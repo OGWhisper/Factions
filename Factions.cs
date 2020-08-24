@@ -25,9 +25,11 @@ namespace Oxide.Plugins
             {
                 foreach (BasePlayer bPlayer in BasePlayer.activePlayerList)
                 {
-                    for (let xC = -1; xC < 2; xC++)
+                    int xC = -1;
+                    int yC = -1;
+                    for (xC = -1; xC < 2; xC++)
                     {
-                        for (let yC = -1; yC < 2; yC++)
+                        for (yC = -1; yC < 2; yC++)
                         {
                             Vector3 pos = bPlayer.transform.position;
                             int X = (int)Math.Floor(pos.x / 50) + xC;
