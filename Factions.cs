@@ -27,6 +27,16 @@ namespace Oxide.Plugins
         private void OnPlayerRespawn(BasePlayer player) => OnPlayerInit(player);
         private void OnPlayerSleepEnded(BasePlayer player) => OnPlayerInit(player);
         private void OnPlayerConnected(BasePlayer player) => OnPlayerInit(player);
+        private void OnTick() {
+            foreach(BasePlayer bPlayer in BasePlayer.activePlayerList) {
+                bPlayer.chunkLast = bPlayer.chunkIn;
+                bPlayer.chunkIn = Chunk.Entered(bPlayer);
+
+                if(bPlayer.chunkLast != bPlayer.chunkIn) {
+                    SendToChat(bPlayer, $"Entered: {bPlayer.chunkIn}");
+                }
+            }
+        }
 
         // private object CanLock(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
         // private object CanDeployItem(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
@@ -49,6 +59,7 @@ namespace Oxide.Plugins
         {
             public string userName = "";
             public string faction = "";
+            public List<string> invites = new List<string>();
             internal static void TryLoad(BasePlayer bPlayer)
             {
                 Player data = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
@@ -67,6 +78,7 @@ namespace Oxide.Plugins
             public List<string> allies = new List<string>();
             public List<string> enemies = new List<string>();
             public List<string> chunks = new List<string>();
+            public List<string> invites = new List<invites>();
             public ulong chieftain = new ulong();
             public string colour = "#00ff00";
             // #ff9900 #6699ff #ff00ff #ff9999 #339933 #ffcc99".Split(" ")[Math.Round(Random()*8 - 0.5)] || "#ff0000";
@@ -195,7 +207,7 @@ namespace Oxide.Plugins
                         }
                     }
                 }
-                else if (claimer.power > 50)
+                else if (claimer.power >= 50)
                 {
                     data = new Chunk();
                     data.faction = claimer.name;
