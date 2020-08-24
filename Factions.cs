@@ -23,10 +23,10 @@ namespace Oxide.Plugins
         }
         private void OnPlayerInit(BasePlayer bPlayer) => Player.TryLoad(bPlayer);
 
-        private void OnPlayerSpawn (BasePlayer player) => OnPlayerInit (player);
-        private void OnPlayerRespawn (BasePlayer player) => OnPlayerInit (player);
-        private void OnPlayerSleepEnded (BasePlayer player) => OnPlayerInit (player);
-        private void OnPlayerConnected (BasePlayer player) => OnPlayerInit (player);
+        private void OnPlayerSpawn(BasePlayer player) => OnPlayerInit(player);
+        private void OnPlayerRespawn(BasePlayer player) => OnPlayerInit(player);
+        private void OnPlayerSleepEnded(BasePlayer player) => OnPlayerInit(player);
+        private void OnPlayerConnected(BasePlayer player) => OnPlayerInit(player);
 
         // private object CanLock(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
         // private object CanDeployItem(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
@@ -53,12 +53,8 @@ namespace Oxide.Plugins
             {
                 Player data = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
 
-                if (data == null)
-                {
-                    data = new Player();
-                    data.userName = bPlayer.displayName;
-                }
-                
+                data.userName = bPlayer.displayName;
+
                 Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Players/{bPlayer.userID}"), data);
             }
         }
@@ -83,14 +79,14 @@ namespace Oxide.Plugins
                 {
                     Player p = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
 
-                    if (p == null)
+                    if (p.userName == "")
                     {
                         return false;
                     }
 
                     Fact fac = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{p.faction}");
 
-                    if (fac != null)
+                    if (fac.name != "")
                     {
                         if (fac.name != p.faction)
                         {
@@ -119,7 +115,7 @@ namespace Oxide.Plugins
             {
                 Fact query = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{name}");
 
-                if (query == null)
+                if (query.name == "")
                 {
                     return "Invalid Faction Name";
                 }
@@ -130,7 +126,7 @@ namespace Oxide.Plugins
                 {
                     Player plr = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{p}");
 
-                    if (plr != null)
+                    if (plr.userName != "")
                     {
                         playerList += plr.userName;
                         playerList += "<br>";
@@ -152,7 +148,7 @@ namespace Oxide.Plugins
 
                 Fact claimer = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{p.faction}");
 
-                if (claimer == null)
+                if (claimer.name == "")
                 {
                     return "You are not in a Faction!";
                 }
@@ -167,13 +163,13 @@ namespace Oxide.Plugins
                 int Y = (int)Math.Floor(pos.y / 50);
                 Chunk data = Interface.Oxide.DataFileSystem.ReadObject<Chunk>($"Factions/Chunks/{X},{Y}");
 
-                if (data != null)
+                if (data.faction != null)
                 {
                     if (data.faction != "")
                     {
                         Fact claimee = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{data.faction}");
 
-                        if (claimee == null)
+                        if (claimee.name == "")
                         {
                             return "Something went wrong. Contact an Administrator! error x002";
                         }
@@ -220,14 +216,14 @@ namespace Oxide.Plugins
             {
                 Player p = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
 
-                if (p == null)
+                if (p.userName == "")
                 {
                     return null;
                 }
 
                 Fact unclaimer = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{p.faction}");
 
-                if (unclaimer == null)
+                if (unclaimer.name == "")
                 {
                     return "You are not in a Faction!";
                 }
@@ -242,7 +238,7 @@ namespace Oxide.Plugins
                 int Y = (int)Math.Floor(pos.y / 50);
                 Chunk data = Interface.Oxide.DataFileSystem.ReadObject<Chunk>($"Factions/Chunks/{X},{Y}");
 
-                if (data == null || data.faction != unclaimer.name)
+                if (data.faction == "" || data.faction != unclaimer.name)
                 {
                     return "You do not own this Chunk!";
                 }
@@ -263,7 +259,7 @@ namespace Oxide.Plugins
                 int Y = (int)Math.Floor(pos.y / 50);
                 Chunk data = Interface.Oxide.DataFileSystem.ReadObject<Chunk>($"Factions/Chunks/{X},{Y}");
 
-                if (data == null)
+                if (data.faction == null)
                 {
                     return "Wilderness";
                 }
@@ -281,7 +277,8 @@ namespace Oxide.Plugins
 
             if (args[0].ToLower() == "create")
             {
-                if(args.Length == 1) {
+                if (args.Length == 1)
+                {
                     PrintToChat(bPlayer, "Invalid Name");
                     return;
                 }
@@ -290,9 +287,12 @@ namespace Oxide.Plugins
 
                 string name = "";
 
-                foreach(string arg in args) {
-                    if(c != 0) {
-                        if(c != 1) {
+                foreach (string arg in args)
+                {
+                    if (c != 0)
+                    {
+                        if (c != 1)
+                        {
                             name += "_";
                         }
                         name += arg;
@@ -303,7 +303,7 @@ namespace Oxide.Plugins
 
                 Fact data = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{name}");
 
-                if (data == null)
+                if (data.name == "")
                 {
                     data = new Fact();
                     data.name = name;
@@ -312,7 +312,7 @@ namespace Oxide.Plugins
 
                     Player p = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
 
-                    if (p == null)
+                    if (p.userName == "")
                     {
                         return;
                     }
