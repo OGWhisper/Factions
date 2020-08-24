@@ -28,8 +28,6 @@ namespace Oxide.Plugins
         private void OnPlayerSleepEnded (BasePlayer player) => OnPlayerInit (player);
         private void OnPlayerConnected (BasePlayer player) => OnPlayerInit (player);
 
-        private void OnServerShutDown () => Unload ();
-
         // private object CanLock(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
         // private object CanDeployItem(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
         // private object OnPayForUpgrade(BasePlayer bPlayer) => Fact.CanAct(bPlayer);
@@ -47,20 +45,12 @@ namespace Oxide.Plugins
         private object OnPlayerAttack(BasePlayer bPlayer, HitInfo info) => Fact.CanAttack(bPlayer, info?.Initiator as BasePlayer);
         private object OnMeleeAttack(BasePlayer bPlayer, HitInfo info) => Fact.CanAttack(bPlayer, info?.Initiator as BasePlayer);
         private object OnPlayerAssist(BasePlayer target, BasePlayer attacker) => Fact.CanAttack(target, attacker);
-
-        private void Unload()
-        {
-            foreach (var data in cachedPlayers) data.Value.Save(data.Key);
-        }
-
         public class Player
         {
             public string userName = "";
             public string faction = "";
             internal static void TryLoad(BasePlayer bPlayer)
             {
-                if (cachedPlayers.ContainsKey(bPlayer.userID)) return;
-
                 Player data = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
 
                 if (data == null)
@@ -68,13 +58,8 @@ namespace Oxide.Plugins
                     data = new Player();
                     data.userName = bPlayer.displayName;
                 }
-
-                cachedPlayers.Add(bPlayer.userID, data);
-            }
-
-            internal void Save(ulong id)
-            {
-                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Players/{id}"), this);
+                
+                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Players/{bPlayer.userID}"), data);
             }
         }
         public class Fact
