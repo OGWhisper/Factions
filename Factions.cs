@@ -20,6 +20,90 @@ namespace Oxide.Plugins
             ins = this;
             //permission.RegisterPermission ("ELORanks.Admin", this);
             foreach (BasePlayer bPlayer in BasePlayer.activePlayerList) OnPlayerInit(bPlayer);
+
+            timer.Every(3f, () =>
+            {
+                foreach (BasePlayer bPlayer in BasePlayer.activePlayerList)
+                {
+                    for (let xC = -1; xC < 2; xC++)
+                    {
+                        for (let yC = -1; yC < 2; yC++)
+                        {
+                            Vector3 pos = bPlayer.transform.position;
+                            int X = (int)Math.Floor(pos.x / 50) + xC;
+                            int Y = (int)Math.Floor(pos.y / 50) + yC;
+                            Chunk data = Interface.Oxide.DataFileSystem.ReadObject<Chunk>($"Factions/Chunks/{X},{Y}");
+
+                            if (data.faction != null)
+                            {
+                                for (let zC = 0; zC < 100; zC += 10)
+                                {
+                                    Vector3 from;
+                                    Vector3 to;
+
+                                    from.x = X * 50;
+                                    from.y = Y * 50;
+                                    from.z = zC;
+
+                                    to.x = X * 50 + 50;
+                                    to.y = Y * 50;
+                                    to.z = zC + 10;
+
+                                    bPlayer.SendConsoleCommand("ddraw.line", 1, "ff0000", from, to);
+                                }
+
+                                for (let zC = 0; zC < 100; zC += 10)
+                                {
+                                    Vector3 from;
+                                    Vector3 to;
+
+                                    from.x = X * 50 + 50;
+                                    from.y = Y * 50;
+                                    from.z = zC;
+
+                                    to.x = X * 50 + 50;
+                                    to.y = Y * 50 + 50;
+                                    to.z = zC + 10;
+
+                                    bPlayer.SendConsoleCommand("ddraw.line", 1, "ff0000", from, to);
+                                }
+
+                                for (let zC = 0; zC < 100; zC += 10)
+                                {
+                                    Vector3 from;
+                                    Vector3 to;
+
+                                    from.x = X * 5 + 50;
+                                    from.y = Y * 50 + 50;
+                                    from.z = zC;
+
+                                    to.x = X * 50;
+                                    to.y = Y * 50 + 50;
+                                    to.z = zC + 10;
+
+                                    bPlayer.SendConsoleCommand("ddraw.line", 1, "ff0000", from, to);
+                                }
+
+                                for (let zC = 0; zC < 100; zC += 10)
+                                {
+                                    Vector3 from;
+                                    Vector3 to;
+
+                                    from.x = X * 50;
+                                    from.y = Y * 50 + 50;
+                                    from.z = zC;
+
+                                    to.x = X * 50;
+                                    to.y = Y * 50;
+                                    to.z = zC + 10;
+
+                                    bPlayer.SendConsoleCommand("ddraw.line", 1, "ff0000", from, to);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
         private void OnPlayerInit(BasePlayer bPlayer) => Player.TryLoad(bPlayer);
 
@@ -27,8 +111,10 @@ namespace Oxide.Plugins
         private void OnPlayerRespawn(BasePlayer player) => OnPlayerInit(player);
         private void OnPlayerSleepEnded(BasePlayer player) => OnPlayerInit(player);
         private void OnPlayerConnected(BasePlayer player) => OnPlayerInit(player);
-        private void OnTick() {
-            foreach(BasePlayer bPlayer in BasePlayer.activePlayerList) {
+        private void OnTick()
+        {
+            foreach (BasePlayer bPlayer in BasePlayer.activePlayerList)
+            {
 
                 Player data = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
 
@@ -36,8 +122,9 @@ namespace Oxide.Plugins
                 data.chunkIn = Chunk.Entered(bPlayer);
 
                 Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Players/{bPlayer.userID}"), data);
-                
-                if(data.chunkLast != data.chunkIn) {
+
+                if (data.chunkLast != data.chunkIn)
+                {
                     PrintToChat(bPlayer, $"Entered: {data.chunkIn}");
                 }
             }
