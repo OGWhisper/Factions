@@ -101,10 +101,10 @@ namespace Oxide.Plugins
             br.z = z + width;
             br.y = h + 10;
 
-            bPlayer.SendConsoleCommand("ddraw.line", 1, color, tl, tr);
-            bPlayer.SendConsoleCommand("ddraw.line", 1, color, tr, bl);
-            bPlayer.SendConsoleCommand("ddraw.line", 1, color, bl, br);
-            bPlayer.SendConsoleCommand("ddraw.line", 1, color, br, tl);
+            bPlayer.SendConsoleCommand("ddraw.line", 1, "", tl, tr);
+            bPlayer.SendConsoleCommand("ddraw.line", 1, "", tr, bl);
+            bPlayer.SendConsoleCommand("ddraw.line", 1, "", bl, br);
+            bPlayer.SendConsoleCommand("ddraw.line", 1, "", br, tl);
         }
         // private void KillMapMarker(MapMarkerGenericRadius mapMarker)
         // {
