@@ -327,7 +327,7 @@ namespace Oxide.Plugins
                 faction.members.Remove(bPlayer.userID);
 
                 Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Players/{id}"), leaver);
-                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{recruiter.faction}"), faction);
+                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{leaver.faction}"), faction);
             }
         }
 
@@ -542,6 +542,11 @@ namespace Oxide.Plugins
 
             if (args[0].ToLower() == "invite")
             {
+                PrintToChat(bPlayer, Fact.invite(bPlayer, (ulong)Convert.ToUInt64(args[1])));
+            }
+
+            if (args[0].ToLower() == "info")
+            {
                 int c = 0;
 
                 string name = "";
@@ -560,12 +565,7 @@ namespace Oxide.Plugins
                     c++;
                 }
 
-                PrintToChat(bPlayer, Fact.invite(bPlayer, name));
-            }
-
-            if (args[0].ToLower() == "info")
-            {
-                PrintToChat(bPlayer, Fact.info(bPlayer, args[1]));
+                PrintToChat(bPlayer, Fact.info(bPlayer, name));
             }
 
             if (args[0].ToLower() == "help")
