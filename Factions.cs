@@ -300,6 +300,8 @@ namespace Oxide.Plugins
 
                 Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Players/{id}"), recruit);
                 Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{recruiter.faction}"), faction);
+
+                return "Invite sent!";
             }
 
             internal static String leave(BasePlayer bPlayer)
@@ -328,6 +330,8 @@ namespace Oxide.Plugins
 
                 Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Players/{bPlayer.userID}"), leaver);
                 Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{leaver.faction}"), faction);
+
+                return "Left Faction!";
             }
         }
 
