@@ -6,6 +6,10 @@ using Oxide.Core.Libraries.Covalence;
 using Oxide.Core.Plugins;
 using Oxide.Game.Rust.Cui;
 using UnityEngine;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Converters;
+using Oxide.Core.Configuration;
 
 namespace Oxide.Plugins
 {
@@ -16,16 +20,30 @@ namespace Oxide.Plugins
         static Factions ins;
         static Dictionary<ulong, Player> cachedPlayers = new Dictionary<ulong, Player>();
         private List<MapMarkerGenericRadius> chunkMarkers = new List<MapMarkerGenericRadius>();
+        private List<BaseEntity> Spheres = new List<BaseEntity>();
+        private const string SphereEnt = "assets/prefabs/visualization/sphere.prefab";
+
+        private void OnEntitySpawned(BaseEntity entity)
+        {
+            if (entity.PrefabName == SphereEnt)
+                Spheres.Add(entity);
+        }
         private void OnServerInitialized()
         {
             ins = this;
-            //permission.RegisterPermission ("ELORanks.Admin", this);
+
             foreach (BasePlayer bPlayer in BasePlayer.activePlayerList) OnPlayerInit(bPlayer);
 
             timer.Every(1f, () =>
             {
+                foreach (var sphere in Spheres)
+                    if (sphere != null)
+                        sphere.KillMessage();
+                Spheres.Clear();
+
                 foreach (BasePlayer bPlayer in BasePlayer.activePlayerList)
                 {
+                    //PrintToChat(bPlayer, $"{(int)Math.Floor(bPlayer.transform.position.x / 50)},{(int)Math.Floor(bPlayer.transform.position.z / 50)}");
                     int xC = -5;
                     int zC = -5;
                     for (xC = -5; xC <= 5; xC++)
@@ -35,9 +53,16 @@ namespace Oxide.Plugins
                             Vector3 pos = bPlayer.transform.position;
 
                             int X = (int)Math.Floor(pos.x / 50) + xC;
-                            int Z = (int)Math.Floor(pos.y / 50) + zC;
+                            int Z = (int)Math.Floor(pos.z / 50) + zC;
 
                             Chunk data = Interface.Oxide.DataFileSystem.ReadObject<Chunk>($"Factions/Chunks/{X},{Z}");
+
+                            square(bPlayer, X * 50, Z * 50, 40, 50);
+                            square(bPlayer, X * 50, Z * 50, 40 + 0.1f, 50);
+                            square(bPlayer, X * 50, Z * 50, 40 + 0.2f, 50);
+                            square(bPlayer, X * 50, Z * 50, 40 + 0.3f, 50);
+                            square(bPlayer, X * 50, Z * 50, 40 + 0.4f, 50);
+                            square(bPlayer, X * 50, Z * 50, 40 + 0.5f, 50);
 
                             if (data.faction != null && data.faction != "")
                             {
@@ -48,6 +73,18 @@ namespace Oxide.Plugins
                                     square(bPlayer, X * 50, Z * 50, h + 0.1f, 50);
                                     square(bPlayer, X * 50, Z * 50, h + 0.2f, 50);
                                 }
+
+                                Vector3 center;
+                                center.x = (X * 50) + 25;
+                                center.z = (X * 50) + 25;
+                                center.y = 80;
+
+                                BaseEntity sphere = GameManager.server.CreateEntity(SphereEnt, center, new Quaternion(), true);
+                                SphereEntity ent = sphere.GetComponent<SphereEntity>();
+                                ent.currentRadius = 25;
+                                ent.lerpSpeed = 0f;
+
+                                sphere.Spawn();
                             }
                         }
                     }
