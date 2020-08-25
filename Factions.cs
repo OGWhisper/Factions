@@ -15,99 +15,121 @@ namespace Oxide.Plugins
     {
         static Factions ins;
         static Dictionary<ulong, Player> cachedPlayers = new Dictionary<ulong, Player>();
+        private List<MapMarkerGenericRadius> chunkMarkers = new List<MapMarkerGenericRadius>();
         private void OnServerInitialized()
         {
             ins = this;
             //permission.RegisterPermission ("ELORanks.Admin", this);
             foreach (BasePlayer bPlayer in BasePlayer.activePlayerList) OnPlayerInit(bPlayer);
 
-            timer.Every(3f, () =>
+            timer.Every(1f, () =>
             {
                 foreach (BasePlayer bPlayer in BasePlayer.activePlayerList)
                 {
-                    int xC = -1;
-                    int yC = -1;
-                    for (xC = -1; xC < 2; xC++)
+                    int xC = -5;
+                    int zC = -5;
+                    for (xC = -5; xC <= 5; xC++)
                     {
-                        for (yC = -1; yC < 2; yC++)
+                        for (zC = -5; zC <= 5; zC++)
                         {
                             Vector3 pos = bPlayer.transform.position;
+
                             int X = (int)Math.Floor(pos.x / 50) + xC;
-                            int Y = (int)Math.Floor(pos.y / 50) + yC;
-                            int zC = 0;
-                            Chunk data = Interface.Oxide.DataFileSystem.ReadObject<Chunk>($"Factions/Chunks/{X},{Y}");
+                            int Z = (int)Math.Floor(pos.y / 50) + zC;
 
-                            if (data.faction != null)
+                            Chunk data = Interface.Oxide.DataFileSystem.ReadObject<Chunk>($"Factions/Chunks/{X},{Z}");
+
+                            if (data.faction != null && data.faction != "")
                             {
-                                for (zC = 0; zC < 100; zC += 10)
+                                float h = 0;
+                                for (h = 0; h < 100; h += 5)
                                 {
-                                    Vector3 from;
-                                    Vector3 to;
-
-                                    from.x = X * 50;
-                                    from.y = Y * 50;
-                                    from.z = zC;
-
-                                    to.x = X * 50 + 50;
-                                    to.y = Y * 50;
-                                    to.z = zC + 10;
-
-                                    bPlayer.SendConsoleCommand("ddraw.line", 1, "ff0000", from, to);
-                                }
-
-                                for (zC = 0; zC < 100; zC += 10)
-                                {
-                                    Vector3 from;
-                                    Vector3 to;
-
-                                    from.x = X * 50 + 50;
-                                    from.y = Y * 50;
-                                    from.z = zC;
-
-                                    to.x = X * 50 + 50;
-                                    to.y = Y * 50 + 50;
-                                    to.z = zC + 10;
-
-                                    bPlayer.SendConsoleCommand("ddraw.line", 1, "ff0000", from, to);
-                                }
-
-                                for (zC = 0; zC < 100; zC += 10)
-                                {
-                                    Vector3 from;
-                                    Vector3 to;
-
-                                    from.x = X * 5 + 50;
-                                    from.y = Y * 50 + 50;
-                                    from.z = zC;
-
-                                    to.x = X * 50;
-                                    to.y = Y * 50 + 50;
-                                    to.z = zC + 10;
-
-                                    bPlayer.SendConsoleCommand("ddraw.line", 1, "ff0000", from, to);
-                                }
-
-                                for (zC = 0; zC < 100; zC += 10)
-                                {
-                                    Vector3 from;
-                                    Vector3 to;
-
-                                    from.x = X * 50;
-                                    from.y = Y * 50 + 50;
-                                    from.z = zC;
-
-                                    to.x = X * 50;
-                                    to.y = Y * 50;
-                                    to.z = zC + 10;
-
-                                    bPlayer.SendConsoleCommand("ddraw.line", 1, "ff0000", from, to);
+                                    square(bPlayer, X * 50, Z * 50, h, 50);
+                                    square(bPlayer, X * 50, Z * 50, h+0.1f, 50);
+                                    square(bPlayer, X * 50, Z * 50, h+0.2f, 50);
                                 }
                             }
                         }
                     }
                 }
             });
+
+            // int a = -100;
+            // int b = -100;
+            // while (a < 100)
+            // {
+            //     Chunk data = Interface.Oxide.DataFileSystem.ReadObject<Chunk>($"Factions/Chunks/{a},{b}");
+
+            //     if (data.faction != null && data.faction != "")
+            //     {
+            //         Vector3 center;
+            //         center.x = (a*50)+25;
+            //         center.z = (b*50)+25;
+            //         center.y = 100;
+            //         createChunkMarker(center);
+            //     }
+
+            //     b++;
+            //     if (b == 100)
+            //     {
+            //         b = -100;
+            //         a++;
+            //     }
+            // }
         }
+
+        void square(BasePlayer bPlayer, float x, float z, float h, float width)
+        {
+            Vector3 tl;
+            Vector3 tr;
+            Vector3 bl;
+            Vector3 br;
+
+            tl.x = x;
+            tl.z = z;
+            tl.y = h;
+
+            tr.x = x + width;
+            tr.z = z;
+            tr.y = h + 10;
+
+            bl.x = x + width;
+            bl.z = z + width;
+            bl.y = h;
+
+            br.x = x;
+            br.z = z + width;
+            br.y = h + 10;
+            
+            bPlayer.SendConsoleCommand("ddraw.line", 1, color, tl, tr);
+            bPlayer.SendConsoleCommand("ddraw.line", 1, color, tr, bl);
+            bPlayer.SendConsoleCommand("ddraw.line", 1, color, bl, br);
+            bPlayer.SendConsoleCommand("ddraw.line", 1, color, br, tl);
+        }
+        // private void KillMapMarker(MapMarkerGenericRadius mapMarker)
+        // {
+        //     if (chunkMarkers.Contains(mapMarker))
+        //         chunkMarkers.Remove(mapMarker);
+
+        //     if (chunkMarkers.Contains(mapMarker))
+        //         chunkMarkers.Remove(mapMarker);
+
+        //     mapMarker.Kill();
+        //     mapMarker.SendUpdate();
+        // }
+
+        // private void createChunkMarker(Vector3 pos)
+        // {
+        //     var mapMarker = GameManager.server.CreateEntity("assets/prefabs/tools/map/genericradiusmarker.prefab", pos) as MapMarkerGenericRadius;
+        //     mapMarker.alpha = 0.2f;
+        //     mapMarker.color1 = Color.yellow;
+        //     mapMarker.radius = 25f;
+
+        //     mapMarker.Spawn();
+        //     mapMarker.SendUpdate();
+
+        //     chunkMarkers.Add(mapMarker);
+        // }
         private void OnPlayerInit(BasePlayer bPlayer) => Player.TryLoad(bPlayer);
 
         private void OnPlayerSpawn(BasePlayer player) => OnPlayerInit(player);
@@ -249,7 +271,7 @@ namespace Oxide.Plugins
         public class Chunk
         {
             public int X;
-            public int Y;
+            public int Z;
             public string faction;
             internal static string Claim(BasePlayer bPlayer)
             {
@@ -269,8 +291,8 @@ namespace Oxide.Plugins
 
                 Vector3 pos = bPlayer.transform.position;
                 int X = (int)Math.Floor(pos.x / 50);
-                int Y = (int)Math.Floor(pos.y / 50);
-                Chunk data = Interface.Oxide.DataFileSystem.ReadObject<Chunk>($"Factions/Chunks/{X},{Y}");
+                int Z = (int)Math.Floor(pos.z / 50);
+                Chunk data = Interface.Oxide.DataFileSystem.ReadObject<Chunk>($"Factions/Chunks/{X},{Z}");
 
                 if (data.faction != null)
                 {
@@ -291,15 +313,15 @@ namespace Oxide.Plugins
                         if (claimer.power > claimee.power)
                         {
                             data.faction = claimer.name;
-                            claimer.chunks.Add($"{X},{Y}");
-                            claimee.chunks.Remove($"{X},{Y}");
+                            claimer.chunks.Add($"{X},{Z}");
+                            claimee.chunks.Remove($"{X},{Z}");
 
                             claimer.power -= 50;
                             claimee.power += 50;
 
                             Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{claimee.name}"), claimee);
                             Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{claimer.name}"), claimer);
-                            Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Chunks/{X},{Y}"), data);
+                            Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Chunks/{X},{Z}"), data);
                             return "Land Claimed";
                         }
                     }
@@ -309,12 +331,12 @@ namespace Oxide.Plugins
                     data = new Chunk();
                     data.faction = claimer.name;
                     data.X = X;
-                    data.Y = Y;
+                    data.Z = Z;
 
                     claimer.power -= 50;
 
                     Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{claimer.name}"), claimer);
-                    Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Chunks/{X},{Y}"), data);
+                    Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Chunks/{X},{Z}"), data);
                     return "Land Claimed";
                 }
 
@@ -344,8 +366,8 @@ namespace Oxide.Plugins
 
                 Vector3 pos = bPlayer.transform.position;
                 int X = (int)Math.Floor(pos.x / 50);
-                int Y = (int)Math.Floor(pos.y / 50);
-                Chunk data = Interface.Oxide.DataFileSystem.ReadObject<Chunk>($"Factions/Chunks/{X},{Y}");
+                int Z = (int)Math.Floor(pos.z / 50);
+                Chunk data = Interface.Oxide.DataFileSystem.ReadObject<Chunk>($"Factions/Chunks/{X},{Z}");
 
                 if (data.faction == "" || data.faction != unclaimer.name)
                 {
@@ -357,7 +379,7 @@ namespace Oxide.Plugins
                 unclaimer.power += 50;
 
                 Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{unclaimer.name}"), unclaimer);
-                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Chunks/{X},{Y}"), data);
+                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Chunks/{X},{Z}"), data);
                 return "Land Unclaimed";
             }
 
@@ -365,10 +387,10 @@ namespace Oxide.Plugins
             {
                 Vector3 pos = bPlayer.transform.position;
                 int X = (int)Math.Floor(pos.x / 50);
-                int Y = (int)Math.Floor(pos.y / 50);
-                Chunk data = Interface.Oxide.DataFileSystem.ReadObject<Chunk>($"Factions/Chunks/{X},{Y}");
+                int Z = (int)Math.Floor(pos.z / 50);
+                Chunk data = Interface.Oxide.DataFileSystem.ReadObject<Chunk>($"Factions/Chunks/{X},{Z}");
 
-                if (data.faction == null)
+                if (data.faction == null || data.faction == "")
                 {
                     return "Wilderness";
                 }
@@ -423,6 +445,12 @@ namespace Oxide.Plugins
 
                     if (p.userName == "")
                     {
+                        return;
+                    }
+
+                    if (p.faction != "")
+                    {
+                        PrintToChat(bPlayer, "You are already in a Faction");
                         return;
                     }
 
