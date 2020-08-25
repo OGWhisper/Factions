@@ -45,8 +45,8 @@ namespace Oxide.Plugins
                                 for (h = 0; h < 100; h += 5)
                                 {
                                     square(bPlayer, X * 50, Z * 50, h, 50);
-                                    square(bPlayer, X * 50, Z * 50, h+0.1f, 50);
-                                    square(bPlayer, X * 50, Z * 50, h+0.2f, 50);
+                                    square(bPlayer, X * 50, Z * 50, h + 0.1f, 50);
+                                    square(bPlayer, X * 50, Z * 50, h + 0.2f, 50);
                                 }
                             }
                         }
@@ -100,7 +100,7 @@ namespace Oxide.Plugins
             br.x = x;
             br.z = z + width;
             br.y = h + 10;
-            
+
             bPlayer.SendConsoleCommand("ddraw.line", 1, color, tl, tr);
             bPlayer.SendConsoleCommand("ddraw.line", 1, color, tr, bl);
             bPlayer.SendConsoleCommand("ddraw.line", 1, color, bl, br);
@@ -197,7 +197,7 @@ namespace Oxide.Plugins
             public List<string> allies = new List<string>();
             public List<string> enemies = new List<string>();
             public List<string> chunks = new List<string>();
-            public List<string> invites = new List<string>();
+            public List<ulong> invites = new List<ulong>();
             public ulong chieftain = new ulong();
             public string colour = "#00ff00";
             // #ff9900 #6699ff #ff00ff #ff9999 #339933 #ffcc99".Split(" ")[Math.Round(Random()*8 - 0.5)] || "#ff0000";
@@ -242,7 +242,7 @@ namespace Oxide.Plugins
                 return false;
             }
 
-            internal static string Info(BasePlayer bPlayer, string name)
+            internal static string info(BasePlayer bPlayer, string name)
             {
                 Fact query = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{name}");
 
@@ -265,6 +265,69 @@ namespace Oxide.Plugins
                 }
 
                 return $"<color = {query.colour}>Faction: {query.name}</color><br>Power: {query.power}<br><color = {"#00ffff"}>Members:</color><br>{playerList}";
+            }
+
+            internal static String invite(BasePlayer bPlayer, ulong id)
+            {
+                Player recruit = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{id}");
+
+                if (recruit.userName == "")
+                {
+                    return "Invalid Name";
+                }
+
+                Player recruiter = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
+
+                if (recruiter.userName == "")
+                {
+                    return "Error x001";
+                }
+
+                Fact faction = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{recruiter.faction}");
+
+                if (faction.name == "")
+                {
+                    return "You are not in a Faction!";
+                }
+
+                if (faction.chieftain != bPlayer.userID)
+                {
+                    return "Only your Factions Chieftain may invite members";
+                }
+
+                recruit.invites.Add(faction.name);
+                faction.invites.Add(id);
+
+                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Players/{id}"), recruit);
+                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{recruiter.faction}"), faction);
+            }
+
+            internal static String leave(BasePlayer bPlayer)
+            {
+                Player leaver = Interface.Oxide.DataFileSystem.ReadObject<Player>($"Factions/Players/{bPlayer.userID}");
+
+                if (leaver.userName == "")
+                {
+                    return "Error x001";
+                }
+
+                Fact faction = Interface.Oxide.DataFileSystem.ReadObject<Fact>($"Factions/Factions/{leaver.faction}");
+
+                if (faction.name == "")
+                {
+                    return "You are not in a Faction!";
+                }
+
+                if (faction.chieftain == bPlayer.userID)
+                {
+                    return "A Faction's Chieftain cannot leave the Faction. They must disband it.";
+                }
+
+                leaver.faction = "";
+                faction.members.Remove(bPlayer.userID);
+
+                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Players/{id}"), leaver);
+                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{recruiter.faction}"), faction);
             }
         }
 
@@ -477,9 +540,42 @@ namespace Oxide.Plugins
                 PrintToChat(bPlayer, Chunk.Unclaim(bPlayer));
             }
 
+            if (args[0].ToLower() == "invite")
+            {
+                int c = 0;
+
+                string name = "";
+
+                foreach (string arg in args)
+                {
+                    if (c != 0)
+                    {
+                        if (c != 1)
+                        {
+                            name += "_";
+                        }
+                        name += arg;
+                    }
+
+                    c++;
+                }
+
+                PrintToChat(bPlayer, Fact.invite(bPlayer, name));
+            }
+
             if (args[0].ToLower() == "info")
             {
-                PrintToChat(bPlayer, Fact.Info(bPlayer, command.ToLower().Replace("!f ", "").Replace("!factions ", "").Replace("info ", "").Replace(" ", "_").ToLower()));
+                PrintToChat(bPlayer, Fact.info(bPlayer, args[1]));
+            }
+
+            if (args[0].ToLower() == "help")
+            {
+                PrintToChat(bPlayer, "<color='#ff0000'>Factions Commands:</color><br>/f create [Name]<br>/f info [Name]<br>/f invite [Steam ID]<br>/f join [Name]<br>/f kick [Name]<br>/f claim<br>/f unclaim<br>/f leave<br>/f disband<br>/f ally [Name]<br>/f enemy [Name]");
+            }
+
+            if (args[0].ToLower() == "leave")
+            {
+                PrintToChat(bPlayer, Fact.leave(bPlayer));
             }
         }
     }
