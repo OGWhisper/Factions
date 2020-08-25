@@ -326,7 +326,7 @@ namespace Oxide.Plugins
                 leaver.faction = "";
                 faction.members.Remove(bPlayer.userID);
 
-                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Players/{id}"), leaver);
+                Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Players/{bPlayer.userID}"), leaver);
                 Interface.Oxide.DataFileSystem.WriteObject(($"Factions/Factions/{leaver.faction}"), faction);
             }
         }
